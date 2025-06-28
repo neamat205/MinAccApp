@@ -1,6 +1,7 @@
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using MinAccApp.Data;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +14,12 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddRazorPages();
+builder.Services.AddScoped<IPermissionService, PermissionService>();
+//builder.Services.ConfigureApplicationCookie(options =>
+//{
+//    options.LoginPath = "/Account/Login";  // 👈 your login page
+//    options.AccessDeniedPath = "/Account/AccessDenied";  // 👈 optional
+//});
 
 var app = builder.Build();
 

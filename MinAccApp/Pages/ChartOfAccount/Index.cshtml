@@ -1,0 +1,135 @@
+﻿@page
+@model MinAccApp.Pages.ChartOfAccount.IndexModel
+
+@{
+    ViewData["Title"] = "Chart of Accounts";
+}
+@if (!string.IsNullOrEmpty(Model.ErrorMessage))
+{
+    <div class="alert alert-danger">@Model.ErrorMessage</div>
+}
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+<div class="py-4">
+    <div class="row">
+        <!-- Account Form -->
+        <div class="col-md-4 mb-4">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">@((Model.IsEdit ? "Update" : "Create") + " Account")</h5>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        <input type="hidden" asp-for="Id" />
+
+                        <div class="mb-3">
+                            <label asp-for="Name" class="form-label">Account Name</label>
+                            <input asp-for="Name" class="form-control" placeholder="e.g. Cash" required />
+                            <span asp-validation-for="Name" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="ParentId" class="form-label">Parent Account</label>
+                            <select asp-for="ParentId" class="form-select">
+                                <option value="">-- Root Level --</option>
+                                @foreach (var acc in Model.FlatChartOfAccount)
+                                {
+                                    <option value="@acc.Id" selected="@(acc.Id == Model.ParentId)">
+                                        @acc.Name
+                                    </option>
+                                }
+                            </select>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" asp-page-handler="@(Model.IsEdit ? "Update" : "Create")" class="btn btn-@(Model.IsEdit ? "warning" : "success")">
+                                @(Model.IsEdit ? "Update" : "Create")
+                            </button>
+                            @if (Model.IsEdit)
+                            {
+                                <a href="/" class="btn btn-outline-secondary">Cancel</a>
+                            }
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Account Tree -->
+        <div class="col-md-8">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-dark text-white">
+                    <h5 class="mb-0">Chart of Accounts</h5>
+                </div>
+                <div class="card-body">
+                    @if (!Model.Hierarchy.Any())
+                    {
+                        <p class="text-muted">No accounts available.</p>
+                    }
+                    else
+                    {
+                        <ul class="list-group list-group-flush">
+                            @foreach (var acc in Model.Hierarchy)
+                            {
+                                <li class="list-group-item">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <span class="fw-bold">@acc.Name</span>
+                                        <div class="text-nowrap">
+                                            <a asp-page-handler="Edit" asp-route-id="@acc.Id" class="btn btn-sm btn-outline-primary me-1">Edit</a>
+                                            <a asp-page-handler="Delete" asp-route-id="@acc.Id" class="btn btn-sm btn-outline-danger"
+                                               onclick="return confirm('Are you sure?')">Delete</a>
+                                        </div>
+                                    </div>
+
+                                    @if (acc.Children.Any())
+                                    {
+                                        <ul class="list-group mt-2 ms-3">
+                                            @foreach (var child in acc.Children)
+                                            {
+                                                <li class="list-group-item">
+                                                    <div class="d-flex justify-content-between align-items-center">
+                                                        <span>@child.Name</span>
+                                                        <div class="text-nowrap">
+                                                            <a asp-page-handler="Edit" asp-route-id="@child.Id" class="btn btn-sm btn-outline-primary me-1">Edit</a>
+                                                            <a asp-page-handler="Delete" asp-route-id="@child.Id" class="btn btn-sm btn-outline-danger"
+                                                               onclick="return confirm('Are you sure?')">Delete</a>
+                                                        </div>
+                                                    </div>
+
+                                                    @if (child.Children.Any())
+                                                    {
+                                                        <ul class="list-group mt-2 ms-3">
+                                                            @foreach (var sub in child.Children)
+                                                            {
+                                                                <li class="list-group-item">
+                                                                    <div class="d-flex justify-content-between align-items-center">
+                                                                        <span>@sub.Name</span>
+                                                                        <div class="text-nowrap">
+                                                                            <a asp-page-handler="Edit" asp-route-id="@sub.Id" class="btn btn-sm btn-outline-primary me-1">Edit</a>
+                                                                            <a asp-page-handler="Delete" asp-route-id="@sub.Id" class="btn btn-sm btn-outline-danger"
+                                                                               onclick="return confirm('Are you sure?')">Delete</a>
+                                                                        </div>
+                                                                    </div>
+                                                                </li>
+                                                            }
+                                                        </ul>
+                                                    }
+                                                </li>
+                                            }
+                                        </ul>
+                                    }
+                                </li>
+                            }
+                        </ul>
+                    }
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

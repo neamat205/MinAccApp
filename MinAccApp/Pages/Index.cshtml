@@ -1,10 +1,112 @@
 ﻿@page
 @model IndexModel
 @{
-    ViewData["Title"] = "Home page";
+    ViewData["Title"] = "Welcome";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<style>
+    body {
+        background: linear-gradient(to bottom, #fdfcfb, #e2d1c3);
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        color: #2c2c2c;
+    }
+
+    .welcome-container {
+        max-width: 900px;
+        margin: 100px auto;
+        padding: 60px;
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 24px;
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+        backdrop-filter: blur(6px);
+        text-align: center;
+        border: 1px solid rgba(212, 175, 55, 0.3);
+    }
+
+    .app-title {
+        font-size: 3.5rem;
+        font-weight: bold;
+        color: #bfa14f; 
+        font-family: 'Playfair Display', serif;
+        letter-spacing: 1px;
+    }
+
+    .tagline {
+        font-size: 1.3rem;
+        margin-top: 10px;
+        font-style: italic;
+        color: #6a5f50;
+    }
+
+    .divider {
+        width: 80px;
+        height: 4px;
+        background: #bfa14f;
+        margin: 25px auto;
+        border-radius: 5px;
+    }
+
+    .app-description {
+        font-size: 1.1rem;
+        margin-top: 30px;
+        color: #444;
+        line-height: 1.7;
+        max-width: 700px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .features {
+        margin-top: 40px;
+        text-align: left;
+        max-width: 700px;
+        margin-left: auto;
+        margin-right: auto;
+        font-size: 1.05rem;
+    }
+
+        .features li {
+            margin-bottom: 14px;
+            padding-left: 20px;
+            position: relative;
+            color: #333;
+        }
+
+            .features li::before {
+                content: "✓";
+                position: absolute;
+                left: 0;
+                color: #bfa14f;
+                font-weight: bold;
+            }
+
+    .footer-note {
+        margin-top: 50px;
+        font-size: 0.9rem;
+        color: #777;
+    }
+</style>
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
+
+<div class="welcome-container">
+    <h1 class="app-title">Qtek Accounting</h1>
+    <div class="tagline">Precision in Every Transaction</div>
+    <div class="divider"></div>
+
+    <p class="app-description">
+        Welcome to Qtec Accounting – your trusted partner in elegant financial management. Designed for professionals, FinVerse combines intuitive accounting tools with luxurious simplicity, ensuring you focus on decisions, not data entry.
+    </p>
+
+    <ul class="features">
+        <li>Elegant Chart of Accounts with intuitive hierarchy</li>
+        <li>Journal, Payment, and Receipt vouchers at your fingertips</li>
+        <li>Fine-grained user role and permission control</li>
+        <li>Export-ready reports and real-time voucher tracking</li>
+        <li>Built with ASP.NET Core & SQL Server for enterprise reliability</li>
+    </ul>
+
+    <div class="footer-note">
+        &copy; 2025 Qtek Accounting — Empowering Financial Foresight
+    </div>
 </div>

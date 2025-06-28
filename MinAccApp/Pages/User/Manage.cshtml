@@ -1,0 +1,161 @@
+﻿@page
+@model MinAccApp.Pages.User.ManageModel
+
+@if (!string.IsNullOrEmpty(TempData["StatusMessage"] as string))
+{
+    <div class="alert alert-info">
+        @TempData["StatusMessage"]
+    </div>
+}
+
+@{
+    ViewData["Title"] = "User Management";
+}
+
+<h1 class="mb-4">User Management</h1>
+
+<div class="row">
+    <!-- Add New Role -->
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">Add New Role</div>
+            <div class="card-body">
+                <form method="post" asp-page-handler="AddRole">
+                    <div class="mb-3">
+                        <input type="text" name="newRoleName" class="form-control" placeholder="Enter role name" required />
+                    </div>
+                    <button type="submit" class="btn btn-success">Add Role</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Permission Management -->
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">Manage Role Permissions</div>
+            <div class="card-body">
+                <form method="post" asp-page-handler="LoadPermissions" class="row g-3 align-items-center mb-3">
+                    <div class="col-auto">
+                        <label for="roleSelect" class="col-form-label">Select Role</label>
+                    </div>
+                    <div class="col-auto">
+                        <select asp-for="SelectedRoleId" asp-items="@(new SelectList(Model.Roles, "RoleId", "RoleName"))" class="form-select" id="roleSelect" required>
+                            <option value="">-- Select Role --</option>
+                        </select>
+                    </div>
+                    <div class="col-auto">
+                        <button type="submit" class="btn btn-primary">Load Permissions</button>
+                    </div>
+                </form>
+
+                @if (Model.UpdatedPermissions?.Count > 0)
+                {
+                    <form method="post" asp-page-handler="SavePermissions">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Module</th>
+                                    <th>View</th>
+                                    <th>Create</th>
+                                    <th>Edit</th>
+                                    <th>Delete</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @for (int i = 0; i < Model.UpdatedPermissions.Count; i++)
+                                {
+                                    <tr>
+                                        <td>@Model.UpdatedPermissions[i].ModuleName</td>
+                                        <td class="text-center">
+                                            <input type="checkbox" asp-for="UpdatedPermissions[@i].CanView" class="form-check-input" />
+                                        </td>
+                                        <td class="text-center">
+                                            <input type="checkbox" asp-for="UpdatedPermissions[@i].CanCreate" class="form-check-input" />
+                                        </td>
+                                        <td class="text-center">
+                                            <input type="checkbox" asp-for="UpdatedPermissions[@i].CanEdit" class="form-check-input" />
+                                        </td>
+                                        <td class="text-center">
+                                            <input type="checkbox" asp-for="UpdatedPermissions[@i].CanDelete" class="form-check-input" />
+                                        </td>
+                                        <input type="hidden" asp-for="UpdatedPermissions[@i].RoleId" />
+                                        <input type="hidden" asp-for="UpdatedPermissions[@i].ModuleName" />
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                        <button type="submit" class="btn btn-success">Save Permissions</button>
+                    </form>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<hr />
+
+<!-- Users List -->
+<div class="mt-4">
+    <h4>User Role Assignment</h4>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>User ID</th>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Current Role</th>
+                <th>Assign New Role</th>
+                <th>Remove User</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.Users?.Count > 0)
+            {
+                foreach (var user in Model.Users)
+                {
+                    <tr>
+                        <td>@user.UserId</td>
+                        <td>@user.UserName</td>
+                        <td>@user.Email</td>
+                        <td>@user.RoleName</td>
+                        <td>
+                            <form method="post" asp-page-handler="AssignRole" class="d-flex">
+                                <input type="hidden" name="userId" value="@user.UserId" />
+                                <select name="roleId" class="form-select me-2" required>
+                                    <option value="">Select Role</option>
+                                    @foreach (var role in Model.Roles)
+                                    {
+                                        <option value="@role.RoleId">@role.RoleName</option>
+                                    }
+                                </select>
+                                <button type="submit" class="btn btn-sm btn-primary">Assign</button>
+                            </form>
+
+                        </td>
+                        <td>
+                            <form method="post" asp-page-handler="DeleteUser" onsubmit="return confirm('Are you sure you want to delete this user?');">
+                                <input type="hidden" name="userId" value="@user.UserId" />
+                                <button type="submit" class="btn btn-sm btn-danger">Delete User</button>
+                            </form>
+                        </td>
+
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="5" class="text-center">No users found.</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success mt-3">
+        @TempData["SuccessMessage"]
+    </div>
+}

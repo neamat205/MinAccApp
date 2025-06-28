@@ -1,0 +1,91 @@
+﻿@page
+@model MinAccApp.Pages.Voucher.IndexModel
+
+@{
+    ViewData["Title"] = "Voucher Entry";
+}
+
+<div class="container my-5 p-4 shadow rounded bg-white">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="text-primary">Saved Vouchers</h2>
+        <a asp-page="Create" class="btn btn-success px-4">
+            <i class="bi bi-plus-circle me-2"></i> New Voucher
+        </a>
+    </div>
+
+    <div class="table-responsive shadow-sm rounded">
+        <table class="table table-hover align-middle">
+            <thead class="table-primary">
+                <tr>
+                    <th>Date</th>
+                    <th>Voucher Type</th>
+                    <th>Reference No</th>
+                    <th>Entries</th>
+                    <th>Account Type</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.SavedVouchers.Count == 0)
+                {
+                    <tr>
+                        <td colspan="5" class="text-center text-muted py-4">
+                            No vouchers found.
+                        </td>
+                    </tr>
+                }
+                else
+                {
+                    foreach (var voucher in Model.SavedVouchers)
+                    {
+                        foreach (var entry in voucher.Entries)
+                        {
+                            <tr>
+                                <td>@(voucher.Date?.ToString("yyyy-MM-dd") ?? "-")</td>
+                                <td>@voucher.VoucherType</td>
+                                <td>@(string.IsNullOrEmpty(voucher.ReferenceNo) ? "-" : voucher.ReferenceNo)</td>
+                                <td>
+                                    <span class="badge bg-@(entry.EntryType == "Debit" ? "success" : "danger") me-2">
+                                        @entry.EntryType
+                                    </span>
+                                    <strong>@entry.Amount.ToString("N2")</strong>
+                                </td>
+                                <td>
+                                    @{
+                                        string accountType = "Unknown";
+                                        Model.AccountTypeMap.TryGetValue(entry.AccountId, out accountType);
+                                    }
+                                    @accountType
+                                </td>
+                            </tr>
+                        }
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section Styles {
+    <style>
+        /* Subtle shadow and hover effect */
+        table.table-hover tbody tr:hover {
+            background-color: #e3f2fd;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        /* Scrollable container with fixed height */
+        .table-responsive {
+            max-height: 400px; /* Adjust height as needed */
+            overflow-y: auto;
+        }
+
+            /* Sticky table header */
+            .table-responsive thead th {
+                position: sticky;
+                top: 0;
+                background-color: #cfe2ff; /* Match .table-primary background */
+                z-index: 10;
+            }
+    </style>
+}
