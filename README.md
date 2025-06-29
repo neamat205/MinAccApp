@@ -22,11 +22,12 @@ dotnet ef database update
 2. Create a new database (e.g., MinAccDB)
 3. Execute .sql files manually from the Database/ directory:
 
+```text 
 📁 Database/
   ├── Tables.sql               # Create application tables
   ├── UserDefinedTypes.sql     # Define custom table types
   ├── StoredProcedures.sql     # Create stored procedures
-
+```
 3. ▶️ Run the application
 
 ```bash dotnet restore
