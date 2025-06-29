@@ -13,15 +13,7 @@
    - Create a new database (e.g., `MinAccDB`)
    - Run all `.sql` files from the `Database/` folder (tables first,then user defined types, then stored procedures)
 
-3. **Configure `appsettings.json`**
 
-   - Add Connection String As Your Hosted DB
-
-   ```json
-   "ConnectionStrings": {
-     "DefaultConnection": ""
-   }
-   ```
 
 4. **Run the application**
    - In Visual Studio: Press F5
@@ -62,3 +54,14 @@
 ### 🧑‍💼 User Management
 
 ![Project Screenshot](images/user-management.png)
+
+## Responsiveness
+
+### 🖥️ Desktop Version
+![Responsiveness Desktop Version](images/responsiveness-desktop-version.png)
+
+### 📱 Mobile Version
+![Responsiveness Mobile Version](images/responsiveness-mobile-version.png)
+
+### 📋 With Navbar
+![Responsiveness With Navbar](images/responsiveness-with-navbar.png)
