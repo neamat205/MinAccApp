@@ -1,76 +1,78 @@
-## 🚀 Getting Started
-
 1. **Clone the repository**
 
    ```bash
    git clone https://github.com/neamat205/MinAccApp.git
    cd MinAccApp
-   ```
 
-## 2. 🔧 Set Up the Database
-
-### 🛠️ Identity Table Migration (EF Core)
-
-This project uses **ASP.NET Core Identity** for authentication and user role management.
-
+2. **🔧 Set Up the Database**
+🛠️ Identity Table Migration (EF Core)
+This project uses ASP.NET Core Identity for authentication and user role management.
 Identity-related tables such as:
-
-- `AspNetUsers`, `AspNetRoles`, `AspNetUserRoles`, `AspNetUserClaims`
-- `AspNetUserLogins`, `AspNetUserTokens`, `AspNetRoleClaims`
-
+• AspNetUsers, AspNetRoles, AspNetUserRoles, AspNetUserClaims
+• AspNetUserLogins, AspNetUserTokens, AspNetRoleClaims
 are generated automatically by running the following EF Core migration commands:
 
-````bash
+```bash 
 dotnet ef migrations add InitialIdentitySetup
 dotnet ef database update
+```
 
-### 🧱 Manual SQL Setup
+🧱 Manual SQL Setup
+1. Open SQL Server Management Studio (SSMS)
+2. Create a new database (e.g., MinAccDB)
+3. Execute .sql files manually from the Database/ directory:
 
-1. Open **SQL Server Management Studio (SSMS)**
-2. Create a new database (e.g., `MinAccDB`)
-3. Execute `.sql` files manually from the `Database/` directory:
-
-```text
 📁 Database/
   ├── Tables.sql               # Create application tables
   ├── UserDefinedTypes.sql     # Define custom table types
   ├── StoredProcedures.sql     # Create stored procedures
 
+3. ▶️ Run the application
 
+```bash dotnet restore
+dotnet run
+```
 
-4. **Run the application**
-   - In Visual Studio: Press F5
-   - Or CLI:
-     ```bash
-     dotnet restore
-     dotnet run
-     ```
-
----
-4. 🔐**Authentication & Authorization**
-
+4. **🔐 Authentication & Authorization**
 ➕ ASP.NET Core Identity Integration
+
 Uses default Identity tables:
-
-   - AspNetUsers, AspNetRoles, AspNetUserRoles, AspNetUserClaims, AspNetUserRoleClaims
-
-   - Enables secure user authentication and role assignment.
-
+• AspNetUsers, AspNetRoles, AspNetUserRoles, AspNetUserClaims, AspNetUserRoleClaims
+• Enables secure user authentication and role assignment.
 ➡️ Custom Role-Based Access (No [Authorize(...)])
+
 Not using [Authorize(Roles = "...")] attribute.
+• Permission enforcement is handled manually at the page level.
+• Controlled via stored procedures:
+    ◦ sp_GetPermissionsForUserAndModule
+    ◦ sp_SetPermissionForRole
+    ◦ sp_AssignRoleToUser
+    ◦ sp_GetPermissionByRole
 
-   - Permission enforcement is handled manually at the page level.
 
-   - Controlled via stored procedures:
+5. **📊 Excel Report Generation**
 
-      - sp_GetPermissionsForUserAndModule
+### Overview
 
-      - sp_SetPermissionForRole
+The application supports exporting data as Excel reports for easy sharing and analysis.
 
-      - sp_AssignRoleToUser
+### Key Features
 
-      - sp_GetPermissionByRole
+- Export data like vouchers, chart of accounts, and user information
+- Generates `.xlsx` files compatible with Microsoft Excel and other spreadsheet software
+- Produces well-formatted, readable reports
+- Efficiently handles large datasets
 
+### How to Use
+
+1. Navigate to the relevant data page (e.g., Voucher List, Chart of Accounts).
+2. Click the **Export to Excel** button.
+3. The Excel report is generated and downloaded automatically.
+
+### Implementation
+
+- Built using the [EPPlus](https://github.com/EPPlusSoftware/EPPlus) library for Excel file creation and manipulation
+- Integrated within the .NET Core backend for smooth operation
 
 
 
@@ -104,6 +106,11 @@ Not using [Authorize(Roles = "...")] attribute.
 
 ![Project Screenshot](images/user-management.png)
 
+### 🧑‍💼 Voucher Report in Excell Form
+
+![Project Screenshot](images/report-export-excell.png)
+
+
 ## Responsiveness
 
 ### 🖥️ Desktop Version
@@ -114,4 +121,3 @@ Not using [Authorize(Roles = "...")] attribute.
 
 ### 📋 With Navbar
 ![Responsiveness With Navbar](images/responsiveness-with-navbar.png)
-````
