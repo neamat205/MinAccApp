@@ -62,3 +62,14 @@
 ### 🧑‍💼 User Management
 
 ![Project Screenshot](images/user-management.png)
+
+## Responsiveness
+
+### 🖥️ Desktop Version
+![Responsiveness Desktop Version](images/responsiveness-desktop-version.png)
+
+### 📱 Mobile Version
+![Responsiveness Mobile Version](images/responsiveness-mobile-version.png)
+
+### 📋 With Navbar
+![Responsiveness With Navbar](images/responsiveness-with-navbar.png)

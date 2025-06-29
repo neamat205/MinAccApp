@@ -109,8 +109,8 @@ namespace MinAccApp.Pages.Voucher
 
         public async Task<IActionResult> OnPostExportAsync()
         {
-            var canView = await _permissionService.HasPermissionAsync(User, "Voucher", "View");
-            if (!canView)
+            var canExport = await _permissionService.HasPermissionAsync(User, "Voucher", "View");
+            if (!canExport)
                 return Redirect("/Index");
 
             await LoadVouchersAsync();
