@@ -4,6 +4,12 @@
 @{
     ViewData["Title"] = "Voucher Entry";
 }
+<form method="post" asp-page-handler="Export">
+    <button type="submit" class="btn btn-primary">
+        Export to Excel
+    </button>
+</form>
+
 
 <div class="container my-5 p-4 shadow rounded bg-white">
     <div class="d-flex justify-content-between align-items-center mb-4">

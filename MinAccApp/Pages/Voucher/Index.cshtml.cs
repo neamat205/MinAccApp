@@ -1,10 +1,9 @@
-using Microsoft.AspNetCore.Authorization;
+﻿
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Data.SqlClient;
 using MinAccApp.Models;
-using System.Diagnostics;
-
+using OfficeOpenXml;
 
 namespace MinAccApp.Pages.Voucher
 {
@@ -24,16 +23,13 @@ namespace MinAccApp.Pages.Voucher
 
         public async Task<IActionResult> OnGetAsync()
         {
-           
             var canView = await _permissionService.HasPermissionAsync(User, "Voucher", "View");
-     
+
             if (!canView)
             {
-                
                 return Redirect("/Index");
             }
 
-      
             await LoadVouchersAsync();
             await LoadAccountTypesAsync();
             await LoadEntriesForVouchersAsync();
@@ -87,9 +83,9 @@ namespace MinAccApp.Pages.Voucher
             foreach (var voucher in SavedVouchers)
             {
                 using var cmd = new SqlCommand(@"
-                    SELECT AccountId, Debit, Credit 
-                    FROM VoucherEntry 
-                    WHERE VoucherId = @VoucherId", conn);
+                        SELECT AccountId, Debit, Credit 
+                        FROM VoucherEntry 
+                        WHERE VoucherId = @VoucherId", conn);
 
                 cmd.Parameters.AddWithValue("@VoucherId", voucher.Id);
 
@@ -110,5 +106,75 @@ namespace MinAccApp.Pages.Voucher
                 reader.Close();
             }
         }
+
+        public async Task<IActionResult> OnPostExportAsync()
+        {
+            var canView = await _permissionService.HasPermissionAsync(User, "Voucher", "View");
+            if (!canView)
+                return Redirect("/Index");
+
+            await LoadVouchersAsync();
+            await LoadAccountTypesAsync();
+            await LoadEntriesForVouchersAsync();
+
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+
+            var stream = new MemoryStream();
+
+            using (var package = new ExcelPackage())
+            {
+                var sheet = package.Workbook.Worksheets.Add("Voucher List");
+
+              
+                sheet.Cells[1, 1].Value = "Voucher Type";
+                sheet.Cells[1, 2].Value = "Date";
+                sheet.Cells[1, 3].Value = "Reference No";
+                sheet.Cells[1, 4].Value = "Account Type";
+                sheet.Cells[1, 5].Value = "Entry Type";
+                sheet.Cells[1, 6].Value = "Amount";
+
+                int row = 2;
+
+                foreach (var voucher in SavedVouchers)
+                {
+                    foreach (var entry in voucher.Entries)
+                    {
+                        sheet.Cells[row, 1].Value = voucher.VoucherType;
+                        sheet.Cells[row, 2].Value = voucher.Date?.ToString("yyyy-MM-dd");
+                        sheet.Cells[row, 3].Value = voucher.ReferenceNo;
+
+               
+                        if (AccountTypeMap.TryGetValue(entry.AccountId, out var accountType))
+                        {
+                            sheet.Cells[row, 4].Value = accountType;
+                        }
+                        else
+                        {
+                            sheet.Cells[row, 4].Value = "Unknown";
+                        }
+
+                        sheet.Cells[row, 5].Value = entry.EntryType;
+                        sheet.Cells[row, 6].Value = entry.Amount;
+
+                        row++;
+                    }
+                }
+
+                await package.SaveAsAsync(stream);
+            }
+
+            stream.Position = 0;
+
+            return File(
+                stream,
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                "Vouchers.xlsx"
+            );
+        }
+
+
+
+
     }
+
 }
