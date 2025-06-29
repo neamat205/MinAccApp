@@ -7,11 +7,34 @@
    cd MinAccApp
    ```
 
-2. **Set up the database**
+## 2. 🔧 Set Up the Database
 
-   - Open SQL Server Management Studio
-   - Create a new database (e.g., `MinAccDB`)
-   - Run all `.sql` files from the `Database/` folder (tables first,then user defined types, then stored procedures)
+### 🛠️ Identity Table Migration (EF Core)
+
+This project uses **ASP.NET Core Identity** for authentication and user role management.
+
+Identity-related tables such as:
+
+- `AspNetUsers`, `AspNetRoles`, `AspNetUserRoles`, `AspNetUserClaims`
+- `AspNetUserLogins`, `AspNetUserTokens`, `AspNetRoleClaims`
+
+are generated automatically by running the following EF Core migration commands:
+
+````bash
+dotnet ef migrations add InitialIdentitySetup
+dotnet ef database update
+
+### 🧱 Manual SQL Setup
+
+1. Open **SQL Server Management Studio (SSMS)**
+2. Create a new database (e.g., `MinAccDB`)
+3. Execute `.sql` files manually from the `Database/` directory:
+
+```text
+📁 Database/
+  ├── Tables.sql               # Create application tables
+  ├── UserDefinedTypes.sql     # Define custom table types
+  ├── StoredProcedures.sql     # Create stored procedures
 
 
 
@@ -24,6 +47,32 @@
      ```
 
 ---
+4. 🔐**Authentication & Authorization**
+
+➕ ASP.NET Core Identity Integration
+Uses default Identity tables:
+
+   - AspNetUsers, AspNetRoles, AspNetUserRoles, AspNetUserClaims, AspNetUserRoleClaims
+
+   - Enables secure user authentication and role assignment.
+
+➡️ Custom Role-Based Access (No [Authorize(...)])
+Not using [Authorize(Roles = "...")] attribute.
+
+   - Permission enforcement is handled manually at the page level.
+
+   - Controlled via stored procedures:
+
+      - sp_GetPermissionsForUserAndModule
+
+      - sp_SetPermissionForRole
+
+      - sp_AssignRoleToUser
+
+      - sp_GetPermissionByRole
+
+
+
 
 ## Screenshots
 
@@ -65,3 +114,4 @@
 
 ### 📋 With Navbar
 ![Responsiveness With Navbar](images/responsiveness-with-navbar.png)
+````
