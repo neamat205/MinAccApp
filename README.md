@@ -58,7 +58,7 @@
 ## Responsiveness
 
 ### 🖥️ Desktop Version
-![Responsiveness Desktop Version](images/responsiveness-desktop-version.png)
+![Responsiveness Desktop Version](images/responsiveness-destop-version.png)
 
 ### 📱 Mobile Version
 ![Responsiveness Mobile Version](images/responsiveness-mobile-version.png)
